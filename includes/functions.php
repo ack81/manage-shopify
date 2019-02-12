@@ -17,34 +17,19 @@ function Add_Admin_Link()
     );
 }
 
-function product_add()
+function product_add($data)
 {
     require 'vendor/autoload.php';
     $client = new GuzzleHttp\Client();
-    $base_url = 'https://side-by-side-garage.myshopify.com/admin/';
+    $url = 'https://side-by-side-garage.myshopify.com/admin/products.json';
     $user = 'bd4ee6a24ee4da8fd100497fcc91c33b';
     $pass = '4167cc2fc1e051383823c5a54683c33d';
 
-    $data = <<<'EOD'
-{
-  "product": {
-    "title": "",
-    "body_html": "<strong>Good snowboard!</strong>",
-    "vendor": "Burton",
-    "product_type": "Snowboard",
-    "published": false
-  }
-}
-EOD;
-
-    $url = $base_url . 'products.json';
-    $response = $client->request('POST', $url,
-        [
-            'auth' => ['bd4ee6a24ee4da8fd100497fcc91c33b', '4167cc2fc1e051383823c5a54683c33d'],
-            'form_params' => json_decode($data, true),
-        ]
-    );
+    $response = $client->request('POST', $url, [
+        'auth' => ['bd4ee6a24ee4da8fd100497fcc91c33b', '4167cc2fc1e051383823c5a54683c33d'],
+        'form_params' => json_decode($data, true)]);
 
     $status_code = $response->getStatusCode();
-    return $status_code;
+    $reason = $response->getReasonPhrase();
+    return $status_code . '-' . $reason;
 }
